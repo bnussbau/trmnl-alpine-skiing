@@ -1,0 +1,17 @@
+<div class="layout layout--col">
+  {%- if rankings.size > 0 -%}
+    {%- assign left_rows = rankings | slice: 0, 8 -%}
+    {%- assign right_rows = rankings | slice: 8, 8 -%}
+    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--large">
+      <div>
+        {% render "ranking_table", rows: left_rows, show_flag: show_flag %}
+      </div>
+      <div>
+        {% render "ranking_table", rows: right_rows, show_flag: show_flag %}
+      </div>
+    </div>
+    {%- else -%}
+    {% render "empty_state" %}
+  {% endif %}
+</div>
+{% render "title_bar", instance_text: discipline_label, note: ranking_note, concise: false %}

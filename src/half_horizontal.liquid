@@ -1,0 +1,14 @@
+<div class="layout">
+  {%- if rankings.size > 0 -%}
+    <div class="columns" data-overflow-max-cols="3">
+      <div class="column">
+        {% for row in rankings %}
+          {% render "ranking_row", row: row, show_flag: show_flag %}
+        {% endfor %}
+      </div>
+    </div>
+  {%- else -%}
+    {% render "empty_state" %}
+  {%- endif -%}
+</div>
+{% render "title_bar", instance_text: discipline_short, note: ranking_note, concise: false %}

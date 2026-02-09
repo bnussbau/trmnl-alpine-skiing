@@ -1,0 +1,48 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+framework_version: 3.4.4
+serverless_language: ''
+refresh_interval_floor: ''
+polling_url: https://afeeds.orf.at/alpine-api/api/cuprankings/{{ discipline_id }}
+polling_headers: ''
+polling_body: ''
+id: 241216
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+custom_fields:
+- keyname: author_bio
+  name: About This Plugin
+  field_type: author_bio
+  description: FIS Alpine Skiing Standings
+  category: sports
+  github_url: https://github.com/bnussbau/trmnl-alpine-skiing
+  learn_more_url: https://github.com/bnussbau/trmnl-alpine-skiing/tree/main/README.md
+- keyname: discipline_id
+  field_type: select
+  name: Skiing discipline
+  description: Choose the FIS Alpine ranking to display
+  options:
+  - Men's Overall World Cup: 4
+  - Men's Downhill: 5
+  - Men's Super-G: 6
+  - Men's Giant Slalom: 7
+  - Men's Slalom: 8
+  - Men's Combined: 9
+  - Women's Overall World Cup: 10
+  - Women's Downhill: 11
+  - Women's Super-G: 12
+  - Women's Giant Slalom: 13
+  - Women's Slalom: 14
+  default: 4
+- keyname: show_nation_image
+  field_type: boolean
+  name: Show nation flag?
+  description: Display nation flag image next to nation code
+  default: false
+name: FIS Alpine Skiing
+description: Live FIS Alpine Skiing Scores
+refresh_interval: 720

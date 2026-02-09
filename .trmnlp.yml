@@ -1,0 +1,9 @@
+---
+watch:
+- ".trmnlp.yml"
+- src
+custom_fields:
+  discipline_id: '4'
+  show_nation_image: 'true'
+variables:
+  trmnl: {}

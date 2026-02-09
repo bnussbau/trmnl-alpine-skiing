@@ -1,0 +1,99 @@
+{%- assign cf = trmnl.plugin_settings.custom_fields_values -%}
+{%- assign show_flag = cf.show_nation_image | default: 'false' -%}
+{%- assign rankings = PersonRankings | default: '' -%}
+
+{%- assign discipline_id = cf.discipline_id | append: '' | strip -%}
+{%- case discipline_id -%}
+  {%- when '4' -%}{%- assign discipline_label = "Men's Overall World Cup" -%}{%- assign discipline_short = "Men's Overall" -%}
+  {%- when '5' -%}{%- assign discipline_label = "Men's Downhill" -%}{%- assign discipline_short = "Downhill" -%}
+  {%- when '6' -%}{%- assign discipline_label = "Men's Super-G" -%}{%- assign discipline_short = "Super-G" -%}
+  {%- when '7' -%}{%- assign discipline_label = "Men's Giant Slalom" -%}{%- assign discipline_short = "Giant Slalom" -%}
+  {%- when '8' -%}{%- assign discipline_label = "Men's Slalom" -%}{%- assign discipline_short = "Slalom" -%}
+  {%- when '9' -%}{%- assign discipline_label = "Men's Combined" -%}{%- assign discipline_short = "Combined" -%}
+  {%- when '10' -%}{%- assign discipline_label = "Women's Overall World Cup" -%}{%- assign discipline_short = "Women's Overall" -%}
+  {%- when '11' -%}{%- assign discipline_label = "Women's Downhill" -%}{%- assign discipline_short = "Downhill" -%}
+  {%- when '12' -%}{%- assign discipline_label = "Women's Super-G" -%}{%- assign discipline_short = "Super-G" -%}
+  {%- when '13' -%}{%- assign discipline_label = "Women's Giant Slalom" -%}{%- assign discipline_short = "Giant Slalom" -%}
+  {%- when '14' -%}{%- assign discipline_label = "Women's Slalom" -%}{%- assign discipline_short = "Slalom" -%}
+  {%- else -%}
+    {%- assign discipline_label = RankingName | default: 'FIS Alpine Skiing' -%}
+    {%- assign discipline_short = discipline_label -%}
+{%- endcase -%}
+
+{%- assign ranking_note = RankingDescription | default: '' | replace: 'Stand nach', 'After' | replace: ' von ', ' of ' | replace: 'Rennen', 'races' -%}
+
+{% template nation_flag %}
+{%- if flag_url != blank -%}
+  <img class="image image-dither w--[18px] h--[12px] no-shrink" src="{{ flag_url }}" alt="{{ flag_code }}">
+{%- endif -%}
+{% endtemplate %}
+
+
+{% template ranking_table %}
+<table class="table table--small lg:table--large lg:portrait:table--base">
+  <thead>
+    <tr>
+      <th class="text--left pr--2"><span class="title title--small">#</span></th>
+      <th class="text--left"><span class="title title--small">Athlete</span></th>
+      <th class="text--left"><span class="title title--small">Nation</span></th>
+      <th class="text--right"><span class="title title--small">Points</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+      <tr{% if row.Rank == 1 %} class="inverse"{% endif %}>
+        <td class="text--left pr--2"><span class="label">{{ row.Rank }}</span></td>
+        <td class="text--left"><span class="title title--small" data-clamp="1">{{ row.FirstName }} {{ row.LastName }}</span></td>
+        <td class="text--left">
+          <div class="flex flex--row flex--left flex--center-y gap--small">
+            {%- if show_flag == 'true' -%}
+              {% render "nation_flag", flag_url: row.NationImage, flag_code: row.NationCC3 %}
+            {%- endif -%}
+            <span class="label label--small">{{ row.NationCC3 }}</span>
+          </div>
+        </td>
+        <td class="text--right"><span class="label value--tnums">{{ row.Value }}</span></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endtemplate %}
+
+{% template ranking_row %}
+<div class="item{% if row.Rank == 1 %} inverse{% endif %}">
+  <div class="meta">
+    <span class="index">{{ row.Rank }}</span>
+  </div>
+  <div class="content">
+    <span class="title title--small" data-clamp="1">{{ row.FirstName }} {{ row.LastName }}</span>
+    <div class="flex flex--row flex--left flex--center-y gap--small">
+      {%- if show_flag == 'true' -%}
+        {% render "nation_flag", flag_url: row.NationImage, flag_code: row.NationCC3 %}
+      {%- endif -%}
+      <span class="label label--small">{{ row.NationCC3 }}</span>
+      <span class="label label--small label--gray 1bit:text--black">{{ row.Value }} pts</span>
+    </div>
+  </div>
+</div>
+{% endtemplate %}
+
+{% template empty_state %}
+<div class="flex flex--col flex--center gap--small stretch text--center">
+  <span class="title">No rankings yet</span>
+  <span class="label label--gray">The season hasn't started.</span>
+</div>
+{% endtemplate %}
+
+
+{% template title_bar %}
+{%- capture plugin_icon -%}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24"><path d="M380.7 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM2.7 268.9c6.1-11.8 20.6-16.3 32.4-10.2L232.7 361.3l46.2-69.2-75.1-75.1c-14.6-14.6-20.4-33.9-18.4-52.1l108.8 52 39.3 39.3c16.2 16.2 18.7 41.5 6 60.6L289.8 391l128.7 66.8c13.6 7.1 29.8 7.2 43.6 .3l15.2-7.6c11.9-5.9 26.3-1.1 32.2 10.7s1.1 26.3-10.7 32.2l-15.2 7.6c-27.5 13.7-59.9 13.5-87.2-.7L12.9 301.3C1.2 295.2-3.4 280.7 2.7 268.9zM118.9 65.6L137 74.2l8.7-17.4c4-7.9 13.6-11.1 21.5-7.2s11.1 13.6 7.2 21.5l-8.5 16.9 54.7 26.2c1.5-.7 3.1-1.4 4.7-2.1l83.4-33.4c34.2-13.7 72.8 4.2 84.5 39.2l17.1 51.2 52.1 26.1c15.8 7.9 22.2 27.1 14.3 42.9s-27.1 22.2-42.9 14.3l-58.1-29c-11.4-5.7-20-15.7-24.1-27.8l-5.8-17.3-27.3 12.1-6.8 3-6.7-3.2L151.5 116.7l-9.2 18.4c-4 7.9-13.6 11.1-21.5 7.2s-11.1-13.6-7.2-21.5l9-18-17.6-8.4c-8-3.8-11.3-13.4-7.5-21.3s13.4-11.3 21.3-7.5z"/></svg>
+{%- endcapture -%}
+<div class="title_bar">
+  <img class="image image--adaptive" src="data:image/svg+xml;base64,{{ plugin_icon | base64_encode }}" alt="">
+  <span class="title">FIS Alpine Skiing</span>
+  <span class="instance">
+    {{ instance_text }}{% if note != blank and concise != true %} &middot; {{ note }}{% endif %}
+  </span>
+</div>
+{% endtemplate %}
