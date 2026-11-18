@@ -43,7 +43,7 @@
     {% for row in rows %}
       <tr{% if row.Rank == 1 %} class="inverse"{% endif %}>
         <td class="text--left pr--2"><span class="label">{{ row.Rank }}</span></td>
-        <td class="text--left"><span class="title title--small" data-clamp="1">{{ row.FirstName }} {{ row.LastName }}</span></td>
+        <td class="text--left"><span class="title title--small" data-clamp="1" data-clamp-lg="2">{{ row.FirstName }} {{ row.LastName }}</span></td>
         <td class="text--left">
           <div class="flex flex--row flex--left flex--center-y gap--small">
             {%- if show_flag == 'true' -%}
@@ -65,7 +65,7 @@
     <span class="index">{{ row.Rank }}</span>
   </div>
   <div class="content">
-    <span class="title title--small" data-clamp="1">{{ row.FirstName }} {{ row.LastName }}</span>
+    <span class="title title--small" data-clamp="1" data-clamp-lg="2">{{ row.FirstName }} {{ row.LastName }}</span>
     <div class="flex flex--row flex--left flex--center-y gap--small">
       {%- if show_flag == 'true' -%}
         {% render "nation_flag", flag_url: row.NationImage, flag_code: row.NationCC3 %}
