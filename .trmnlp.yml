@@ -5,5 +5,8 @@ watch:
 custom_fields:
   discipline_id: '4'
   show_nation_image: 'true'
+  highlight_nation: ''
 variables:
-  trmnl: {}
+  trmnl:
+    user:
+      utc_offset: 3600

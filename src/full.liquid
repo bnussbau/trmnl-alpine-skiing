@@ -1,15 +1,20 @@
-<div class="layout layout--col">
+<div class="layout layout--col lg:layout--justify-start md:portrait:layout--justify-start">
   {%- if rankings.size > 0 -%}
+    <p class="title hidden lg:block md:portrait:block">Leaderboard</p>
     {%- assign left_rows = rankings | slice: 0, 8 -%}
     {%- assign right_rows = rankings | slice: 8, 8 -%}
-    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--large">
+    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--large md:portrait:hidden">
       <div>
-        {% render "ranking_table", rows: left_rows, show_flag: show_flag %}
+        {% render "ranking_table", rows: left_rows, show_flag: show_flag, highlight_nation: highlight_nation %}
       </div>
       <div>
-        {% render "ranking_table", rows: right_rows, show_flag: show_flag %}
+        {% render "ranking_table", rows: right_rows, show_flag: show_flag, highlight_nation: highlight_nation %}
       </div>
     </div>
+    <div class="hidden md:portrait:block w--full">
+      {% render "ranking_table", rows: rankings, show_flag: show_flag, highlight_nation: highlight_nation %}
+    </div>
+    {% render "next_races", events: upcoming, size: 'small', trmnl: trmnl %}
     {%- else -%}
     {% render "empty_state" %}
   {% endif %}

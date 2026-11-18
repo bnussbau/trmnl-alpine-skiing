@@ -1,9 +1,9 @@
-<div class="layout">
+<div class="layout layout--col">
   {%- if rankings.size > 0 -%}
     <div class="columns" data-overflow-max-cols="3">
       <div class="column">
         {% for row in rankings %}
-          {% render "ranking_row", row: row, show_flag: show_flag %}
+          {% render "ranking_row", row: row, show_flag: show_flag, highlight_nation: highlight_nation %}
         {% endfor %}
       </div>
     </div>

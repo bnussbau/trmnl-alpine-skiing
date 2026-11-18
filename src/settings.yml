@@ -5,9 +5,9 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: get
 framework_version: 3.4.4
-serverless_language: ''
+serverless_language: node
 refresh_interval_floor: ''
-polling_url: https://afeeds.orf.at/alpine-api/api/cuprankings/{{ discipline_id }}
+polling_url: "https://afeeds.orf.at/alpine-api/api/cuprankings/{{ discipline_id }}\r\nhttps://d3d9gfgi4uhmnd.cloudfront.net/alpine-api/api/sportevents?top=20&view=next"
 polling_headers: ''
 polling_body: ''
 id: 241216
@@ -43,6 +43,13 @@ custom_fields:
   name: Show nation flag?
   description: Display nation flag image next to nation code
   default: false
+- keyname: highlight_nation
+  field_type: string
+  name: Highlight nation
+  description: Highlight nation code e.g. 'AUT'
+  maxlength: 3
+  optional: true
+  default: ''
 name: FIS Alpine Skiing
 description: Live FIS Alpine Skiing Scores
 refresh_interval: 720

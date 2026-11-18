@@ -1,6 +1,7 @@
 {%- assign cf = trmnl.plugin_settings.custom_fields_values -%}
 {%- assign show_flag = cf.show_nation_image | default: 'false' -%}
-{%- assign rankings = PersonRankings | default: '' -%}
+{%- assign highlight_nation = cf.highlight_nation | default: '' | strip | upcase -%}
+{%- assign rankings = IDX_0.PersonRankings | default: '' -%}
 
 {%- assign discipline_id = cf.discipline_id | append: '' | strip -%}
 {%- case discipline_id -%}
@@ -21,10 +22,11 @@
 {%- endcase -%}
 
 {%- assign ranking_note = RankingDescription | default: '' | replace: 'Stand nach', 'After' | replace: ' von ', ' of ' | replace: 'Rennen', 'races' -%}
+{%- assign upcoming = IDX_1.data | slice: 0, 4 -%}
 
 {% template nation_flag %}
 {%- if flag_url != blank -%}
-  <img class="image image-dither w--[18px] h--[12px] no-shrink" src="{{ flag_url }}" alt="{{ flag_code }}">
+  <img class="image image-dither w--[18px] h--[12px] lg:w--[24px] lg:h--[16px] no-shrink" src="{{ flag_url }}" alt="{{ flag_code }}">
 {%- endif -%}
 {% endtemplate %}
 
@@ -41,18 +43,19 @@
   </thead>
   <tbody>
     {% for row in rows %}
-      <tr{% if row.Rank == 1 %} class="inverse"{% endif %}>
-        <td class="text--left pr--2"><span class="label">{{ row.Rank }}</span></td>
-        <td class="text--left"><span class="title title--small" data-clamp="1" data-clamp-lg="2">{{ row.FirstName }} {{ row.LastName }}</span></td>
+      {%- assign row_nation = row.NationCC3 | upcase -%}
+      <tr class="{% if highlight_nation != blank and row_nation == highlight_nation %}inverse {% endif %}{% if forloop.index > 16 %}hidden{% elsif forloop.index > 8 %}hidden md:portrait:table-row{% endif %}">
+        <td class="text--left pr--2"><span class="label lg:label--large lg:landscape:label--xlarge">{{ row.Rank }}</span></td>
+        <td class="text--left"><span class="title title--small lg:title--large" data-clamp="1">{{ row.FirstName }} {{ row.LastName }}</span></td>
         <td class="text--left">
           <div class="flex flex--row flex--left flex--center-y gap--small">
             {%- if show_flag == 'true' -%}
               {% render "nation_flag", flag_url: row.NationImage, flag_code: row.NationCC3 %}
             {%- endif -%}
-            <span class="label label--small">{{ row.NationCC3 }}</span>
+            <span class="label label--small lg:label--large lg:landscape:label--xlarge">{{ row.NationCC3 }}</span>
           </div>
         </td>
-        <td class="text--right"><span class="label value--tnums">{{ row.Value }}</span></td>
+        <td class="text--right"><span class="label lg:label--large lg:landscape:label--xlarge value--tnums">{{ row.Value }}</span></td>
       </tr>
     {% endfor %}
   </tbody>
@@ -60,7 +63,13 @@
 {% endtemplate %}
 
 {% template ranking_row %}
-<div class="item{% if row.Rank == 1 %} inverse{% endif %}">
+{%- assign row_nation = row.NationCC3 | upcase -%}
+{%- if highlight_nation != blank and row_nation == highlight_nation -%}
+  {%- assign marked = ' inverse' -%}
+{%- else -%}
+  {%- assign marked = '' -%}
+{%- endif -%}
+<div class="item{{ marked }}">
   <div class="meta">
     <span class="index">{{ row.Rank }}</span>
   </div>
@@ -75,6 +84,55 @@
     </div>
   </div>
 </div>
+{% endtemplate %}
+
+{% template next_races %}
+{%- if events.size > 0 -%}
+<p class="title hidden lg:block md:portrait:block lg:mt--4 lg:portrait:title lg:portrait:mt--2 md:portrait:mt--2">Next races</p>
+<table class="table {% if size == 'small' %}table--small{% else %}table--xsmall{% endif %} w--auto" data-table-limit="true">
+    <thead>
+      <tr>
+        <th class="text--left"><span class="title title--small">Date</span></th>
+        <th class="bg--white w--6">&nbsp;</th>
+        <th class="text--left"><span class="title title--small">Time</span></th>
+        <th class="bg--white w--6">&nbsp;</th>
+        <th class="text--left"><span class="title title--small">Discipline</span></th>
+        <th class="bg--white w--6">&nbsp;</th>
+        <th class="text--left"><span class="title title--small">Location</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in events | limit: 3 %}
+        {%- assign disc_id = event.DisciplineId | append: '' | strip -%}
+        {%- case disc_id -%}
+          {%- when '1' -%}{%- assign disc = 'Downhill' -%}
+          {%- when '2' -%}{%- assign disc = 'Giant Slalom' -%}
+          {%- when '3' -%}{%- assign disc = 'Super-G' -%}
+          {%- when '4' -%}{%- assign disc = 'Slalom' -%}
+          {%- when '5' -%}{%- assign disc = 'Combined' -%}
+          {%- else -%}{%- assign disc = '' -%}
+        {%- endcase -%}
+        {%- assign gender_id = event.GenderId | append: '' | strip -%}
+        {%- case gender_id -%}
+          {%- when '1' -%}{%- assign gender = 'Men' -%}
+          {%- when '2' -%}{%- assign gender = 'Women' -%}
+          {%- else -%}{%- assign gender = '' -%}
+        {%- endcase -%}
+        {%- assign vienna_utc_offset = 3600 -%}
+        {%- assign event_at = event.EventDate | date: '%s' | minus: vienna_utc_offset | plus: trmnl.user.utc_offset -%}
+        <tr>
+          <td class="text--left"><span class="label label--small">{{ event_at | date: '%d.%m.%Y' }}</span></td>
+          <td class="bg--white w--6">&nbsp;</td>
+          <td class="text--left"><span class="label label--small value--tnums">{{ event_at | date: '%H:%M' }}</span></td>
+          <td class="bg--white w--6">&nbsp;</td>
+          <td class="text--left"><span class="label label--small" data-clamp="1">{{ disc }} {{ gender }}</span></td>
+          <td class="bg--white w--6">&nbsp;</td>
+          <td class="text--left"><span class="label label--small" data-clamp="1">{{ event.LocationName }}, {{ event.LocationNationName }}</span></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{%- endif -%}
 {% endtemplate %}
 
 {% template empty_state %}
