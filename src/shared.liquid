@@ -21,7 +21,7 @@
     {%- assign discipline_short = discipline_label -%}
 {%- endcase -%}
 
-{%- assign ranking_note = RankingDescription | default: '' | replace: 'Stand nach', 'After' | replace: ' von ', ' of ' | replace: 'Rennen', 'races' -%}
+{%- assign ranking_note = IDX_0.RankingDescription | default: '' | replace: 'Stand nach', 'After' | replace: ' von ', ' of ' | replace: 'Rennen', 'races' -%}
 {%- assign upcoming = IDX_1.data | slice: 0, 4 -%}
 
 {% template nation_flag %}
@@ -88,7 +88,7 @@
 
 {% template next_races %}
 {%- if events.size > 0 -%}
-<p class="title hidden lg:block md:portrait:block lg:mt--4 lg:portrait:title lg:portrait:mt--2 md:portrait:mt--2">Next races</p>
+<p class="title hidden lg:block md:portrait:block lg:mt--4 lg:portrait:title--base lg:portrait:mt--2 md:portrait:mt--2">Next races</p>
 <table class="table {% if size == 'small' %}table--small{% else %}table--xsmall{% endif %} w--auto" data-table-limit="true">
     <thead>
       <tr>
@@ -127,7 +127,7 @@
           <td class="bg--white w--6">&nbsp;</td>
           <td class="text--left"><span class="label label--small" data-clamp="1">{{ disc }} {{ gender }}</span></td>
           <td class="bg--white w--6">&nbsp;</td>
-          <td class="text--left"><span class="label label--small" data-clamp="1">{{ event.LocationName }}, {{ event.LocationNationName }}</span></td>
+          <td class="text--left"><span class="label label--small" data-clamp="1" data-clamp-lg="2">{{ event.LocationName }}, {{ event.LocationNationName }}</span></td>
         </tr>
       {% endfor %}
     </tbody>
