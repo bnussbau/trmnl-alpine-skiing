@@ -102,7 +102,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for event in events | limit: 3 %}
+      {% for event in events limit: 3 %}
         {%- assign disc_id = event.DisciplineId | append: '' | strip -%}
         {%- case disc_id -%}
           {%- when '1' -%}{%- assign disc = 'Downhill' -%}
