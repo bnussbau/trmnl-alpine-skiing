@@ -51,5 +51,5 @@ custom_fields:
   optional: true
   default: ''
 name: FIS Alpine Skiing
-description: 'Leaderboard & Upcoming events'
+description: Leaderboard & Upcoming events
 refresh_interval: 720
